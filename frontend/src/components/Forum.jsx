@@ -1,55 +1,52 @@
-
-
-
-import React, { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import API from "../services/api"
-import "./forum.css"  // <-- Import the CSS file here
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../services/api";
+import "./forum.css";  // <-- Import the CSS file here
 
 function Forum() {
-  const [title, setTitle] = useState("")
-  const [content, setContent] = useState("")
-  const [posts, setPosts] = useState([])
-  const [replyText, setReplyText] = useState("")
-  const [currentPostId, setCurrentPostId] = useState(null)
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [replyText, setReplyText] = useState("");
+  const [currentPostId, setCurrentPostId] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPosts()
-  }, [])
+    fetchPosts();
+  }, []);
 
   const fetchPosts = async () => {
     try {
-      const { data } = await API.get("/forum")
-      setPosts(data)
+      const { data } = await API.get("/forum");
+      setPosts(data);
     } catch (error) {
-      console.error(error.response?.data || error.message)
+      console.error(error.response?.data || error.message);
     }
-  }
+  };
 
   const handleCreatePost = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await API.post("/forum", { title, content })
-      setTitle("")
-      setContent("")
-      fetchPosts()
+      await API.post("/forum", { title, content });
+      setTitle("");
+      setContent("");
+      fetchPosts();
     } catch (error) {
-      console.error(error.response?.data || error.message)
+      console.error(error.response?.data || error.message);
     }
-  }
+  };
 
   const handleReply = async (postId) => {
     try {
-      await API.post("/forum/reply", { postId, replyText })
-      setReplyText("")
-      setCurrentPostId(null)
-      fetchPosts()
+      await API.post("/forum/reply", { postId, replyText });
+      setReplyText("");
+      setCurrentPostId(null);
+      fetchPosts();
     } catch (error) {
-      console.error(error.response?.data || error.message)
+      console.error(error.response?.data || error.message);
     }
-  }
+  };
 
   return (
     <div className="forum-container">
@@ -122,8 +119,7 @@ function Forum() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
-export default Forum
-
+export default Forum;

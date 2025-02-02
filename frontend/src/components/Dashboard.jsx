@@ -4,6 +4,7 @@ import API from "../services/api"
 import "./dashboard.css"  // <-- Import the CSS file
 
 function Dashboard() {
+  // State variables to store user inputs and logs
   const [painLevel, setPainLevel] = useState(0)
   const [cycleDay, setCycleDay] = useState(0)
   const [medicationTaken, setMedicationTaken] = useState("")
@@ -11,16 +12,19 @@ function Dashboard() {
   const [stressLevel, setStressLevel] = useState(0)
   const [diet, setDiet] = useState("")
 
+  // State variables for logs and analysis data
   const [logs, setLogs] = useState([])
   const [analysis, setAnalysis] = useState({})
 
   const navigate = useNavigate()
 
+  // Fetch logs and analysis data when the component mounts
   useEffect(() => {
     fetchLogs()
     fetchAnalysis()
   }, [])
 
+  // Function to fetch symptom logs from the API
   const fetchLogs = async () => {
     try {
       const { data } = await API.get("/symptoms")
@@ -30,6 +34,7 @@ function Dashboard() {
     }
   }
 
+  // Function to fetch analysis data from the API
   const fetchAnalysis = async () => {
     try {
       const { data } = await API.get("/symptoms/analysis")
@@ -39,6 +44,7 @@ function Dashboard() {
     }
   }
 
+  // Function to handle form submission for logging symptoms
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
@@ -53,13 +59,16 @@ function Dashboard() {
         }
       }
       await API.post("/symptoms", payload)
-      // reset fields
+      
+      // Reset input fields after submission
       setPainLevel(0)
       setCycleDay(0)
       setMedicationTaken("")
       setNotes("")
       setDiet("")
       setStressLevel(0)
+
+      // Refresh logs and analysis after submission
       fetchLogs()
       fetchAnalysis()
     } catch (error) {
@@ -67,6 +76,8 @@ function Dashboard() {
     }
   }
 
+  
+  // Function to handle user logout
   const handleLogout = () => {
     localStorage.removeItem("token")
     navigate("/")
@@ -74,6 +85,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
+      {/* Header section with navigation buttons */}
       <div className="dashboard-header">
         <h2>Dashboard</h2>
         <div className="button-group">
@@ -82,6 +94,7 @@ function Dashboard() {
         </div>
       </div>
 
+       {/* Symptom Logging Form */}
       <form className="symptom-form" onSubmit={handleSubmit}>
         <div>
           <label>Pain Level (1-10):</label>
@@ -139,7 +152,8 @@ function Dashboard() {
       </form>
 
       <hr />
-
+      
+      {/* Section to display logged symptoms */}
       <div className="logs-section">
         <h3>Your Symptom Logs</h3>
         {logs.map(log => (
@@ -153,6 +167,7 @@ function Dashboard() {
         ))}
       </div>
 
+      {/* Analysis Section */}
       <div className="analysis-section">
         <h3>Analysis</h3>
         {analysis?.overallAveragePain ? (
